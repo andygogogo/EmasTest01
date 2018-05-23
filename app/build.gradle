@@ -1,0 +1,181 @@
+apply plugin: 'com.taobao.android.emas'
+apply from: 'common.gradle'
+
+configurations {
+    providedCompile
+    all*.exclude group: 'com.android.support', module: 'multidex'
+    all*.exclude group: 'com.taobao.android', module: 'tnet-jni'
+    all*.exclude group: 'com.taobao.android', module: 'tlog_adapter'
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor(0, 'SECONDS')
+        cacheChangingModulesFor(0, 'SECONDS')
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+    distributionUrl = 'http://emas-deploy.oss-cn-hangzhou.aliyuncs.com/gradle-3.3-all.zip'
+}
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    compileOptions.encoding = 'UTF-8'
+    defaultConfig {
+        applicationId "com.emas.test01"
+        minSdkVersion 17
+        targetSdkVersion 26
+        multiDexEnabled true
+        ndk {
+            abiFilters "x86", "armeabi"  //默认只启用x86,armeabi
+        }
+        resConfigs "en", "fr"
+    }
+    dexOptions {
+        jumboMode = true
+        preDexLibraries = true
+        javaMaxHeapSize = '2048m'
+    }
+    signingConfigs {
+        debug {
+            storeFile file('ds.jks')
+            storePassword '20180508'
+            keyAlias 'ds'
+            keyPassword '20180508'
+        }
+
+        release {
+            storeFile file('ds.jks')
+            storePassword '20180508'
+            keyAlias 'ds'
+            keyPassword '20180508'
+        }
+    }
+    buildTypes {
+        debug {
+            // debug模式
+            multiDexEnabled true
+            // 是否进行混淆
+            minifyEnabled false
+            proguardFile 'proguard.cfg'
+            signingConfig signingConfigs.debug
+
+        }
+
+        release {
+            multiDexEnabled true
+            shrinkResources false
+            // 是否进行混淆
+            minifyEnabled false
+            proguardFile 'proguard.cfg'
+            signingConfig signingConfigs.release
+
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+    /************基础库 START**********/
+    compile('com.alibaba:fastjson:1.1.54.android@jar') { transitive true }
+    compile('com.taobao.android:mtopsdk_allinone:3.0.6-open@jar') { transitive true }
+    compile('com.taobao.android:networksdk:3.3.5-open@jar') { transitive true }
+    compile('com.taobao.android:tnet4android:3.1.14.6@aar') { transitive true }
+    compile('com.taobao.android:utdid4all:1.1.5.3_proguard@jar') { transitive true }
+    /************基础库 END**********/
+
+    /************UPDATE START**********/
+    compile('com.taobao.android:atlas_core:5.0.8.0@aar') { transitive true }
+    compile('com.taobao.android:open-update-aar:1.0.1-open@aar') {
+        transitive true
+    }
+    compile('com.taobao.android:downloader:2.0.2.12@jar') { transitive true }
+    /************UPDATE END**********/
+
+    /************高可用 SDK START**********/
+    compile('com.taobao.android:accs_sdk_taobao:3.3.3.1-open') { transitive true }
+    compile('com.taobao.android:ut-analytics:1.1.0.1-open@aar') { transitive true }
+    compile('com.alibaba.ha:alihatbadapter:1.1.0.2-open@aar') {
+        transitive true
+    }
+    //默认oss通道需要依赖oss的三方库
+    compile 'com.squareup.okhttp3:okhttp:3.4.1@jar'
+    compile 'com.squareup.okio:okio:1.9.0@jar'
+    compile 'com.aliyun.dpa:oss-android-sdk:2.4.2@aar'
+    /************高可用 SDK END**********/
+
+    /************WEEX SDK START**********/
+    compile("com.taobao.android:weex_sdk:0.17.9-new-measurement-1") { transitive true }
+    compile('com.taobao.android:zcache:0.1.1-proguard') { transitive true }
+    compile('com.alibaba.mtl:dynamicConfig:0.1.0.10') { transitive true }
+    compile('com.alibaba.mtl:dynamicconfigadapter:0.1.0.10') { transitive true }
+    compile('com.android.support:recyclerview-v7:26.+') { transitive true }
+    compile 'com.android.support:appcompat-v7:26.+'
+    /************WEEX SDK END**********/
+
+    /************ATLAS START**********/
+    compile('com.taobao.android:atlas_core:5.0.8.0@aar') { transitive true }
+    compile("com.taobao.android:open-update-aar:1.0.1-open@aar") { transitive true }
+    compile("com.taobao.android:downloader:2.0.2.12@jar") { transitive true }
+
+    // 公有云推送SDK
+    compile ('com.aliyun.emas:alicloud-android-push:3.1.3.2') {
+        exclude group: 'com.aliyun.ams', module: 'alicloud-android-ut'
+        exclude group: 'com.aliyun.ams', module: 'alicloud-android-utdid'
+    }
+
+    compile("com.hzbank.android:dsweex:1.0.0.1-dsweex-SNAPSHOT@aar") {//加载网络js，测试zcache
+        transitive true
+        exclude group: 'com.alibaba.mtl', module: 'dynamicConfig'
+        exclude group: 'com.alibaba.mtl', module: 'dynamicconfigadapter'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
+}
+
+group = 'com.hzbank.android'
+version = android.defaultConfig.versionName + '-SNAPSHOT'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            if (project.gradle.startParameter.toString().contains("assembleDebug")) {
+                artifact "${project.buildDir}/outputs/apk/${project.name}-debug.ap"
+                artifactId "AP-debug"
+            } else {
+                artifact "${project.buildDir}/outputs/apk/${project.name}-release.ap"
+                artifactId "AP-release"
+            }
+
+        }
+    }
+
+    repositories {
+        if (version.endsWith("-SNAPSHOT")) {
+            maven {
+                url "http://" + CUSTOM_REPOSITORY_HOST + "/repository/maven-snapshots/"
+                credentials {
+                    username = CUSTOM_REPOSITORY_USERNAME
+                    password = CUSTOM_REPOSITORY_PASSWORD
+                }
+            }
+        } else {
+            maven {
+                url "http://" + CUSTOM_REPOSITORY_HOST + "/repository/maven-releases/"
+                credentials {
+                    username = CUSTOM_REPOSITORY_USERNAME
+                    password = CUSTOM_REPOSITORY_PASSWORD
+                }
+            }
+        }
+
+    }
+}

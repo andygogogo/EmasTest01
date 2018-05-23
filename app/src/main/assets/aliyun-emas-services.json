@@ -1,0 +1,18 @@
+{
+    "private_cloud_config":{
+        "AppKey": "20000180",
+        "AppSecret": "c516212bf79b1eb4f174dcb0d4067463",
+        "ACCSDoman": "emaspoc-acs.emas-ha.cn",
+        "MTOPDoman": "emaspoc-aserver.emas-ha.cn",
+        "ChannelID": "1001@DemoApp_Android_1.0",
+        "CacheURL": "http://publish-poc.emas-ha.cn/eweex/",
+        "HAOSSBucketName": "emas-ha-remote-log-poc",
+        "HAUniversalHost": "emaspoc-adash.emas-ha.cn",
+        "HARSAPublicKey": "",
+        "StartActivity": "",
+        "IPStrategy": {
+
+        }
+
+    }
+}

@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context="com.emas.test052301.MainActivity">
 
     <TextView
         android:id="@+id/hello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:layout_gravity="center"
-        android:textSize="20dp"/>
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@android:color/holo_blue_dark"
+        android:gravity="center"
+        android:text="登录"
+        android:textColor="@android:color/white"
+        android:textSize="26dp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/weex"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@android:color/holo_blue_dark"
+        android:gravity="center"
+        android:text="WEEX"
+        android:textColor="@android:color/white"
+        android:textSize="26dp" />
+
+</LinearLayout>

@@ -130,13 +130,25 @@ dependencies {
         exclude group: 'com.aliyun.ams', module: 'alicloud-android-utdid'
     }
 
-    compile("com.hzbank.android:dsweex:1.0.0.1-dsweex-SNAPSHOT@aar") {//加载网络js，测试zcache
+//    compile("com.hzbank.android:dsweex:1.0.0.1-dsweex-SNAPSHOT@aar") {//加载网络js，测试zcache
+//        transitive true
+//        exclude group: 'com.alibaba.mtl', module: 'dynamicConfig'
+//        exclude group: 'com.alibaba.mtl', module: 'dynamicconfigadapter'
+//        exclude group: 'com.android.support', module: 'appcompat-v7'
+//        exclude group: 'com.android.support', module: 'recyclerview-v7'
+//    }
+
+    //Weex module
+    compile("com.taobao.emas.weex:weex:1.0.1.5-ys-SNAPSHOT@aar") {
         transitive true
         exclude group: 'com.alibaba.mtl', module: 'dynamicConfig'
         exclude group: 'com.alibaba.mtl', module: 'dynamicconfigadapter'
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
+    compile("com.taobao.android:native_crash_test:1.0.0.1@aar") { transitive true }
+    compile("com.journeyapps:zxing-android-embedded:3.2.0@aar") { transitive true }
+    compile("com.google.zxing:core:3.2.1@jar") { transitive true }
 }
 
 group = 'com.hzbank.android'

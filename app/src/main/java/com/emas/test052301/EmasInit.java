@@ -2,7 +2,9 @@ package com.emas.test052301;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.taobao.atlas.runtime.ClassNotFoundInterceptorCallback;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,10 +24,8 @@ import com.taobao.accs.AccsException;
 import com.taobao.accs.IAppReceiver;
 import com.taobao.accs.common.Constants;
 import com.taobao.accs.utl.ALog;
-import com.taobao.update.adapter.UpdateAdapter;
-import com.taobao.update.apk.ApkUpdater;
+import com.taobao.update.UpdateManager;
 import com.taobao.update.common.Config;
-import com.taobao.update.common.framework.UpdateRuntime;
 import com.taobao.update.datasource.UpdateDataSource;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
@@ -107,17 +107,37 @@ public class EmasInit {
         }
     }
     /********************UPDATE SDK START **************************/
+//    public void initUpdate() {
+//        initMtop();
+//        Config config = new Config();
+//        config.group = mAppkey + "@android";//AppInfoHelper.getGroup();
+//        config.ttid = mTTid;
+//        config.isOutApk = false;
+//        config.appName = "EMAS Demo";
+//        ApkUpdater apkupdate = new ApkUpdater();
+//        UpdateAdapter updateAdapter = new UpdateAdapter();
+//        UpdateDataSource.getInstance().init(mApplication, config.group, config.ttid, config.isOutApk, updateAdapter);
+//        UpdateRuntime.init(mApplication, config.ttid, config.appName, config.group);
+//        UpdateDataSource.getInstance().startUpdate(false, false);
+//    }
+
+
     public void initUpdate() {
         initMtop();
         Config config = new Config();
         config.group = mAppkey + "@android";//AppInfoHelper.getGroup();
         config.ttid = mTTid;
         config.isOutApk = false;
-        config.appName = "EMAS Demo";
-        ApkUpdater apkupdate = new ApkUpdater();
-        UpdateAdapter updateAdapter = new UpdateAdapter();
-        UpdateDataSource.getInstance().init(mApplication, config.group, config.ttid, config.isOutApk, updateAdapter);
-        UpdateRuntime.init(mApplication, config.ttid, config.appName, config.group);
+        config.appName = "EMAS Test01";
+        UpdateManager.getInstance().init(config,
+                new ClassNotFoundInterceptorCallback() {
+
+                    @Override
+                    public Intent returnIntent(Intent intent) {
+                        Log.e("APP", "returnIntent" + intent.toString());
+                        return null;
+                    }
+                }, true);
         UpdateDataSource.getInstance().startUpdate(false, false);
     }
     private void initMtop() {
